@@ -1,57 +1,66 @@
-var canvas;
-var music;
-var b1, b2, b3, b4
-var ball;
-function preload(){
-    music = loadSound("music.mp3");
+// define varaibles here
+var garden,gardenImg;
+var cat,catImgSitting,catWalkingImg,catLastImg;
+var mouse,mouseImgCheese, mouseTeasingImg,mouseLastImg;
+
+function preload() {
+    //loading the images here
+gardenImg=loadImage("garden.png");
+catImgSitting=loadImage("cat1.png");
+catWalkingImg=loadAnimation("cat2.png","cat3.png");
+mouseImgCheese=loadImage("mouse1.png");
+mouseTeasingImg=loadAnimation("mouse2.png","mouse3.png");
+catLastImg=loadAnimation("cat4.png");
+mouseLastImg=loadAnimation("mouse4.png");
 }
 
-
 function setup(){
-    canvas = createCanvas(800,600);
+    createCanvas(985,585);
 
-    b1 = createSprite(0,580,360,30)
-    b1.shapeColor = "blue"
+    //creating the background
+    garden = createSprite(470,300);
+    garden.addImage("BACKGROUND",gardenImg);
+    garden.scale = 1.66;
 
-    b2 = createSprite(295,580,200,30)
-    b2.shapeColor = "yellow"
+    //creating cat and mouse sprites here
+    cat = createSprite(850,500);
+    cat.addImage("cat1",catImgSitting);
+    cat.scale = 0.13;
+    cat.setCollider("rectangle",0,0,1300,800)
 
-    b3 = createSprite(515,580,200,30)
-    b3.shapeColor = "pink"
-
-    b4 = createSprite(740,580,220,30)
-    b4.shapeColor = "green"
-
-    ball = createSprite(random(20, 750),100, 40, 40)
-    ball.shapeColor= "white"
-    ball.velocityX= 4;
-    ball.velocityY= 9;
- 
-    }
+    mouse = createSprite(150,500);
+    mouse.addImage("mouse1",mouseImgCheese);
+    mouse.scale = 0.15;
+}
 
 function draw() {
-    background("grey");
-    //create edgeSprite
-    edges = createEdgeSprites();
-    ball.bounceOff(edges);
+  background(255);
 
-    if(b1.isTouching(ball)&& ball.bounceOff(b1)){
-        ball.shapeColor = "blue";
-        music.play() 
-    }
-    if(b2.isTouching(ball) ){
-        ball.shapeColor = "yellow";
-        music.stop() 
-        ball.velocityX=0
-        ball.velocityY=0
-        
-    }
-    if(b3.isTouching(ball)&& ball.bounceOff(b3)){
-        ball.shapeColor = "pink"; 
-    }
-    if(b4.isTouching(ball)&& ball.bounceOff(b4)){
-        ball.shapeColor = "green";
-    }
-       drawSprites()
+   //to make start moving the cat and mouse when left arrow is pressed
+    //if(keyDown === "LEFT_ARROW"){
+        //keyPressed();
+    //}
+    //keyPressed();
+    //Write condition here to evalute if tom and jerry collide
+    if(cat.x - mouse.x < (cat.width - mouse.width)/2) {
+        cat.addAnimation("catLast",catLastImg);
+        cat.changeAnimation("catLast");
+        cat.velocityX = 0;
+        mouse.addAnimation("mouseLast",mouseLastImg);
+        mouse.changeAnimation("mouseLast");
     }
     
+    drawSprites();
+}
+
+function keyPressed(){
+//For moving and changing animation write code here
+ if(keyCode === LEFT_ARROW){
+    cat.velocityX = -5;
+    cat.addAnimation("catWalking",catWalkingImg);
+    cat.changeAnimation("catWalking");
+    mouse.addAnimation("mouseTeasing",mouseTeasingImg);
+    mouse.changeAnimation("mouseTeasing");
+    mouse.scale = 0.09;
+}
+}
